@@ -12,6 +12,10 @@ function criarNovoItem(event) {
             break;
         }
     }
+    if (descricao.value === "" || valor.value === "" || tipoMarcado === "") {
+        alert("Você deve preencher todos os campos.");
+        return;
+    }
     const novoItem = {
         "tipo": tipoMarcado,
         "descricao": descricao.value,
@@ -32,6 +36,7 @@ function criarNovoItem(event) {
     atualizarValor();
 }
 
+//criar td para cada elemento
 function criarNovaCelula(dado) {
     const novaCelula = document.createElement('td');
     novaCelula.innerHTML = dado;
@@ -45,15 +50,17 @@ function criarNovaCelula(dado) {
     return novaCelula;
 }
 
+//criar nova linha na tabela
 function criarNovaLinha(item) {
     const novaLinha = document.createElement('tr');
+
     novaLinha.appendChild(criarNovaCelula(item.tipo));
     novaLinha.appendChild(criarNovaCelula(item.descricao));
     novaLinha.appendChild(criarNovaCelula(`R$ ${item.valor}`));
     
     const botaoDeletar = document.createElement('td');
     const img = document.createElement('img');
-    img.src = './assets/delete.svg';
+    img.src = 'assets/delete.svg';
     img.width = '20';
     img.style.cursor = 'pointer';
     botaoDeletar.appendChild(img);
@@ -68,10 +75,11 @@ function criarNovaLinha(item) {
     return novaLinha;
 }
 
+//atualizar o saldo 
 function atualizarValor() {
     let total = 0;
     itens.forEach((item) => {
-        if (item.tipo === "Entrada"){
+        if (item.tipo === "Receita"){
             total += Number(item.valor)
         } else {
             total -= Number(item.valor)
@@ -79,9 +87,9 @@ function atualizarValor() {
     });
     document.getElementById('saldo').textContent = total.toFixed(2)
     localStorage.setItem("saldo", total.toFixed(2))
-    console.log(total)
 }
 
+//recuperar itens do local storage
 itens.forEach((item) => {
     const novaLinha = criarNovaLinha(item);
     tabela.appendChild(novaLinha);
